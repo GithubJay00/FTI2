@@ -1,18 +1,91 @@
+
+--{{ Bypass }}--
+
+if game.GameId == 6361937392 then
+	
+	game:GetService("ReplicatedFirst"):FindFirstChild("Static"):FindFirstChild("Superman").Parent = nil
+	game:GetService("ReplicatedFirst"):FindFirstChild("Prod"):FindFirstChild("Stats").Parent = nil
+	game:GetService("ReplicatedFirst"):FindFirstChild("Static"):FindFirstChild("UIScaleHandler").Parent = nil
+	
+	
+	--{{ Spoof }}--
+
+	-- ReplicatedStorage.Remotes.SetPlatform:FireServer(false, true) -- controller
+
+	--	ReplicatedStorage.Remotes.SetPlatform:FireServer(true, true) -- mobile
+
+	-- ReplicatedStorage.Remotes.SetPlatform:FireServer(false, false) -- computer
+end
+
+----------------
+
+
+--{{ Even more Bypass }}--
+
+local MT = getrawmetatable(game)
+local OldIndex = MT. __index
+local OldNamecall = MT.__namecall
+
+setreadonly(MT, false)
+MT.__index = newcclosure(function(H, HP, T, D) --Bypasses some anti FTI checks. (uBlubble, Xelvidant, etc.)
+	if not checkcaller() and getnamecallmethod() then
+		
+		if tostring(H) == "Humanoid" and tostring(HP) == "Health" then
+			return 0
+		end
+		if tostring(T) == "Position" and tostring(D) == "Magnitude" then
+			return 0
+		end
+	end
+	return OldIndex(H, HP)
+end)
+
+local StarterGui = game:GetService("StarterGui")
+
+local DevConsoleHook --Bypasses all dev console disablers.
+DevConsoleHook = hookfunc(StarterGui.SetCore, newcclosure(function(Self, ...)
+	local Args = table.pack(...)
+	if Self == StarterGui then
+		if Args[1] == "DevConsoleVisible" then
+			Args[1] = nil
+		end
+	end
+end))
+
+--Bypasses script execution.
+for _,v in next, getconnections(game:GetService("LogService").MessageOut) do
+	v:Disable()
+end
+for _,v in next, getconnections(game:GetService("ScriptContext").Error) do
+	v:Disable()
+end
+
+game:GetService("ScriptContext"):SetTimeout(0.1)
+setreadonly(MT, true) 
+
+--------------------------
+
+
+
+
+
 --{{ Settings }}--
 
 getgenv().Settings = {
 	
-	Range = 6.5 , 
+	Range = 6 , 
 	
 	Dmg = 2 , 
 	
 	Toggle = true ,
 	
-	Amp = false 
+	Amp = false , 
 	
 }
 
 ------------------
+
+
 
 
 
@@ -32,6 +105,7 @@ local player = Players.LocalPlayer
 function Notify(info)
 	StarterGui:SetCore("SendNotification", {Title = "FTI", Text = info})
 end
+
 Notify(tostring(Settings.Toggle))
 
 ------------------
@@ -97,13 +171,11 @@ RunService.Stepped:Connect(function()
 										end
 									end
 								else
-
+									
 									local Qhrp = limbs.HumanoidRootPart
-
-									for _ = 1, Settings.Dmg do 
-										firetouchinterest(Qhrp, Handle, 0)
-										firetouchinterest(Qhrp, Handle, 1)
-									end
+ 
+									firetouchinterest(Qhrp, Handle, 0)
+									firetouchinterest(Qhrp, Handle, 1)
 								end
 							end
 						end
@@ -115,3 +187,9 @@ RunService.Stepped:Connect(function()
 end)
 
 ------------------
+
+-- Im such a skid for this
+
+-- aaa000798 
+
+-- discord yo
