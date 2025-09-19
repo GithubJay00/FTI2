@@ -43,7 +43,7 @@ end)
 local StarterGui = game:GetService("StarterGui")
 
 local DevConsoleHook --Bypasses all dev console disablers.
-DevConsoleHook = hookfunc(StarterGui.SetCore, newcclosure(function(Self, ...)
+DevConsoleHook = hookfunction(StarterGui.SetCore, newcclosure(function(Self, ...)
 	local Args = table.pack(...)
 	if Self == StarterGui then
 		if Args[1] == "DevConsoleVisible" then
