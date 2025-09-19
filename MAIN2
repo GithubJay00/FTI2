@@ -1,0 +1,117 @@
+--{{ Settings }}--
+
+getgenv().Settings = {
+	
+	Range = 6 , 
+	
+	Dmg = 2 , 
+	
+	Toggle = true ,
+	
+	Amp = false 
+	
+}
+
+------------------
+
+
+
+--{{ Variables }}--
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local StarterGui = game:GetService("StarterGui")
+local player = Players.LocalPlayer
+
+------------------
+
+
+
+--{{ Notify }}--
+
+function Notify(info)
+	StarterGui:SetCore("SendNotification", {Title = "FTI", Text = info})
+end
+Notify(tostring(Settings.Toggle))
+
+------------------
+
+
+
+--{{ Script }}--
+
+RunService.Stepped:Connect(function()
+	
+	if Settings.Toggle then
+		
+		for _, p in pairs(Players:GetPlayers()) do
+			if p.Name ~= player.Name then
+
+				local qChar = p.Character
+				local qHRP = qChar and qChar:FindFirstChild("HumanoidRootPart")
+				local qHM = qChar and qChar:FindFirstChildOfClass("Humanoid")
+
+				local Char = player.Character
+				local HRP = Char and Char:FindFirstChild("HumanoidRootPart")
+				local HM = Char and Char:FindFirstChildOfClass("Humanoid")
+
+				if HM and qHM then
+					if HM.Health > 0 and qHM.Health > 0 then
+						
+						
+						local limbs = {
+							RightArm = qChar:FindFirstChild("Right Arm") ,
+							
+							LeftArm = qChar:FindFirstChild("Left Arm") ,
+							
+							RightLeg = qChar:FindFirstChild("Right Leg") ,
+							
+							LeftLeg = qChar:FindFirstChild("Left Leg") ,
+							
+							Torso = qChar:FindFirstChild("Torso") ,
+							
+							HumanoidRootPart = qChar:FindFirstChild("HumanoidRootPart") ,
+							
+							Head = qChar:FindFirstChild("Head")
+						}
+
+
+						local tool = Char and Char:FindFirstChildOfClass("Tool")
+						local Handle = tool and tool:FindFirstChild("Handle")
+
+						if tool and Handle then
+							
+							local Distance = (Handle.Position - qHRP.Position).Magnitude
+							if Distance <= Settings.Range then
+
+								tool:Activate()
+
+								if Settings.Amp then 
+									for _, limb in ipairs(limbs) do
+										if limb then
+											for _ = 1, Settings.Dmg + 2 do
+												firetouchinterest(limb, Handle, 0)
+												firetouchinterest(limb, Handle, 1)
+												firetouchinterest(limb, Handle, 0)
+											end
+										end
+									end
+								else
+
+									local Qhrp = limbs.HumanoidRootPart
+
+									for _ = 1, Settings.Dmg do 
+										firetouchinterest(Qhrp, Handle, 0)
+										firetouchinterest(Qhrp, Handle, 1)
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+	end
+end)
+
+------------------
