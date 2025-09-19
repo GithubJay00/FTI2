@@ -2,7 +2,7 @@
 
 getgenv().Settings = {
 	
-	Range = 6 , 
+	Range = 6.5 , 
 	
 	Dmg = 2 , 
 	
